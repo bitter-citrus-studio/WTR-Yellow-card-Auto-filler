@@ -1,0 +1,206 @@
+<head>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="popup.js"></script>
+</head>
+
+
+<h1>Yellow Card AutoFiller</h1>
+
+
+
+<form id="ycAutofillForm">
+    <label for="pName">First Name</label>
+    <input type="text" id="pName" name="pName" placeholder="Full Name">
+
+    <label for="pTeam">Player's Team</label>
+    <select id="pTeam" name="pTeam">
+    </select>
+
+    <label for="pPosition">Player's Position</label>
+    <select id="pPosition" name="pPosition">
+        <option value="*">Choose a Position</option>
+        <option value="Prop">Prop</option>
+        <option value="Hooker">Hooker</option>
+        <option value="Second Row">Second Row</option>
+        <option value="Wing Forward">Wing Forward</option>
+        <option value="No 8">No 8</option>
+        <option value="Scrum Half">Scrum Half</option>
+        <option value="Stand Off">Stand Off</option>
+        <option value="Centre">Centre</option>
+        <option value="Wing">Wing</option>
+        <option value="Full Back">Full Back</option>
+    </select>
+
+    <label for="pNumber">Player's Number</label>
+    <select id="pNumber" name="pNumber">
+        <option value="*">Choose a Number</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+        <option value="21">21</option>
+
+
+    </select>
+
+    <label for="OffenceN">Offence Number</label>
+    <select id="OffenceN" name="OffenceN">
+        <option value="Law 4 – 5 (a-h) Illegal clothing">Law 4 – 5 (a-h) Illegal clothing</option>
+        <option value="Law 6 – 13 Assistant Referee input">Law 6 – 13 Assistant Referee input</option>
+        <option value="Law 9 – Obstruction (1-6)">Law 9 – Obstruction (1-6)</option>
+        <option value="Law 9 – 7(a-d) Unfair Play">Law 9 – 7(a-d) Unfair Play</option>
+        <option value="Law 9 – 9 Repeated Infringements">Law 9 – 9 Repeated Infringements</option>
+        <option value="Law 9 – 10 Team Repeated Infringements" selected>Law 9 – 10 Team Repeated Infringements</option>
+        <option value="Law 9 – 12 Dangerous Play">Law 9 – 12 Dangerous Play</option>
+        <option value="Law 9 – 13 Dangerous tackle (high)">Law 9 – 13 Dangerous tackle (high)</option>
+        <option value="Law 9 – 14 Play Op. Without Ball">Law 9 – 14 Play Op. Without Ball</option>
+        <option value="Law 9 – 16 Dangerous Charging">Law 9 – 16 Dangerous Charging</option>
+        <option value="Law 9 – 17 Tackle player in air">Law 9 – 17 Tackle player in air</option>
+        <option value="Law 9 – 18 Dangerous Tackle (drop/drive)">Law 9 – 18 Dangerous Tackle (drop/drive)</option>
+        <option value="Law 9 – 19 Dangerous Play in Scrum (a-d)">Law 9 – 19 Dangerous Play in Scrum (a-d)</option>
+        <option value="Law 9 – 20 Dangerous Play in Ruck/Maul (a-c)">Law 9 – 20 Dangerous Play in Ruck/Maul (a-c)</option>
+        <option value="Law 9 – 21 Retaliation">Law 9 – 21 Retaliation</option>
+        <option value="Law 9 – 23 Kicking ball out hands">Law 9 – 23 Kicking ball out hands</option>
+        <option value="Law 9 – 24 Dangerous Hand Off">Law 9 – 24 Dangerous Hand Off</option>
+        <option value="Law 9 – 25 Obstructing Kicker">Law 9 – 25 Obstructing Kicker</option>
+        <option value="Law 9 – 26 Bad Sportsmanship">Law 9 – 26 Bad Sportsmanship</option>
+        <option value="Law 9 – 27 Dispute Ref Authority">Law 9 – 27 Dispute Ref Authority</option>
+    </select>
+
+    <label for="pGame">Period of Game</label>
+    <select id="pGame" name="pGame">
+        <option value="*">Choose...</option>
+        <option value="1st Half">1st Half</option>
+        <option value="2nd Half">2nd Half</option>
+        <option value="Extra time 1st Half">Extra time 1st Half</option>
+        <option value="Extra time 2nd Half">Extra time 2nd Half</option>
+    </select>
+
+    <label for="tElapsed">Time Elapsed</label>
+    <select id="tElapsed" name="tElapsed">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+        <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+        <option value="24">24</option>
+        <option value="25">25</option>
+        <option value="26">26</option>
+        <option value="27">27</option>
+        <option value="28">28</option>
+        <option value="29">29</option>
+        <option value="30">30</option>
+        <option value="31">31</option>
+        <option value="32">32</option>
+        <option value="33">33</option>
+        <option value="34">34</option>
+        <option value="35">35</option>
+        <option value="36">36</option>
+        <option value="37">37</option>
+        <option value="38">38</option>
+        <option value="39">39</option>
+        <option value="40">40</option>
+    </select>
+
+    <label for="score">Score</label>
+    <input type="text" id="score" name="score" value="" placeholder="Score">
+
+    <label for="refProx">Proximity to ref (m)</label>
+    <select id="refProx" name="refProx">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+    </select>
+
+    <label for="conditions">Conditions</label>
+    <select id="conditions" name="conditions">
+        <option value="">Choose an option or leave blank</option>
+        <option value="Dry, dry pitch">Dry, dry pitch</option>
+        <option value="Dry but slippery bal">Dry but slippery ball</option>
+        <option value="Wet with a slippery ball">Wet with a slippery ball</option>
+        <option value="Dry but windy">Dry but windy</option>
+    </select>
+
+    <label for="temperOfGame">Pattern/Temper of Game</label>
+    <select id="temperOfGame" name="temperOfGame">
+        <option value="">Choose an option or leave blank</option>
+        <option value="Even and well Contested game">Even and well Contested game</option>
+        <option value="Huge score difference, one team better than the other">Huge score difference, one team better than the other</option>
+        <option value="Tight game with a few scuffles">Tight game with a few scuffles</option>
+    </select>
+
+    <label for="playerCautioned">Was the player previously Cautioned?</label>
+    <select id="playerCautioned" name="playerCautioned">
+        <option value="No" selected>No</option>
+        <option value="Yes">Yes</option>
+    </select>
+
+    <label for="flaggedByAR">Was it flagged by an appointed AR?</label>
+    <select id="flaggedByAR" name="flaggedByAR">
+        <option value="No" selected>No</option>
+        <option value="Yes">Yes</option>
+    </select>
+
+    <label for="dissent">Did the player accept it without dissent?</label>
+    <select id="dissent" name="dissent">
+        <option value="No">No</option>
+        <option value="Yes" selected>Yes</option>
+    </select>
+
+    <label for="report">Sample Report</label>
+    <textarea id="report" name="report" rows="5" placeholder="Sample report"></textarea>
+    <br />
+
+    <button type="submit" id="submit">Fill Form</button>
+
+    <hr class="solid"><hr/>
+
+    <weeText>This tool should help with reports but please verify all the infomation before submitting</weeText>
+
+</form>
