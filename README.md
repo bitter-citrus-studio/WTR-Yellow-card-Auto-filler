@@ -10,3 +10,15 @@ This is tool to help reduce time making the same report, if a report requires di
 1. Turn on developer mode in Google Chrome
 2. Upload whole folder
 3. Extension will be available in the extension tab
+
+### Why I made the extensions 
+When I make yellow card reports, I always feel for certain law reasons I make the same report over and over again. This extension semi automates the process, saving time 
+
+### How it works?
+The idea behind this is to make something that resembles a password manager for a form. The extension should:
+- Detect the 2 teams from the WTR form.
+- The user can input the relevant information
+- A few of the form options now have a drop down of well used phrases
+- The report box will create a sample report based on the team, number and law. 
+- When finished the form, when the fill form button is clicked, will fill the report on the webpage.
+The report and other options can then be refined, if required.
