@@ -1,16 +1,16 @@
 {
   "manifest_version": 3,
-  "name": "YC Autofiller",
+  "name": "SRU Report Autofiller",
   "version": "1.0",
   "permissions": [ "tabs", "scripting", "storage", "activeTab" ],
-  "host_permissions": [ "<all_urls>" ],
+  "host_permissions": [ "https://www.whostheref.com/*" ],
   "action": {
     "default_popup": "popup.html"
   },
 
   "content_scripts": [
     {
-      "matches": [ "https://www.whostheref.com/db_admin/yellowcard.php*" ],
+      "matches": [ "https://www.whostheref.com/db_admin/*" ],
       "js": [ "content.js" ],
       "css": [ "styles.css" ]
     }
