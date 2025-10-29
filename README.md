@@ -21,4 +21,5 @@ The idea behind this is to make something that resembles a password manager for 
 - A few of the form options now have a drop down of well used phrases
 - The report box will create a sample report based on the team, number and law. 
 - When finished the form, when the fill form button is clicked, will fill the report on the webpage.
+
 The report and other options can then be refined, if required.
