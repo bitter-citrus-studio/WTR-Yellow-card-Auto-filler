@@ -1,1 +1,1 @@
-# How to install in Chrome(While testing)
+# How to install in Chrome (While testing)
