@@ -1,4 +1,6 @@
 # WTR-Yellow-card-Auto-filler
+> Only on Google Chrome.
+
 To help the process of adding cards to WTR, to reduce paperwork time.  
 This is the first iteration(1.0.0)
 * Auto fill YC card form
