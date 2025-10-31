@@ -6,7 +6,7 @@ This is the first iteration(1.0.0)
 This is tool to help reduce time making the same report, if a report requires different info, obviously can be changed in the final report.
 
 ## Contents
-[How to Install for testing purporses](https://github.com/bitter-citrus-studio/WTR-Yellow-card-Auto-filler/blob/main/How%20to%20install(Testing).md)
+[How to Install for testing purposes](https://github.com/bitter-citrus-studio/WTR-Yellow-card-Auto-filler/blob/main/How%20to%20install(Testing).md)
 
 ### Why I made the extensions 
 When I make yellow card reports, I always feel for certain law reasons I make the same report over and over again. This extension semi automates the process, saving time 
