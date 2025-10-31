@@ -1,19 +1,54 @@
-# Visual Studio
+# Ignore Visual Studio user-specific files
 .vs/
-*.vsidx
-*.user
 *.suo
+*.user
 *.userosscache
 *.sln.docstates
 
-# Build results
+# Ignore build results
 [Bb]in/
 [Oo]bj/
+[Ll]og/
+[Tt]emp/
 
-# Other common Visual Studio files
+# Ignore test result files
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Ignore Auto Generated Files
+GeneratedFiles/
+
+# Ignore ReSharper / Rider files
+_ReSharper*/
+*.DotSettings.user
+
+# Ignore NuGet packages
+*.nupkg
+*.snupkg
+packages/
+!**/packages/build/
+!**/packages/repositories.config
+
+# Ignore Azure build outputs
+csx/
+*.build.csdef
+
+# Ignore publish outputs
+publish/
+out/
+wwwroot/dist/
+
+# Ignore node modules (if using frontend build)
+node_modules/
+dist/
+
+# Ignore others
 *.log
 *.tlog
 *.pdb
-*.ipch
+*.cache
 *.db
 *.opendb
+
+# Ignore environment-specific config
+.env
