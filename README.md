@@ -1,15 +1,19 @@
 # WTR-Yellow-card-Auto-filler
 To help the process of adding cards to WTR, to reduce paperwork time.  
 This is the first iteration(1.0.0)
-* Auto fill YC card form <br>
+* Auto fill YC card form
 * The report text will change based on Team and player number, also what law citing 
 This is tool to help reduce time making the same report, if a report requires different info, obviously can be changed in the final report.
 
 ## How to use (In testing)
 
-1. Turn on developer mode in Google Chrome
-2. Upload whole folder
-3. Extension will be available in the extension tab
+1. Download the whole GitHub repository by clicking the download button.
+2. Navigate to extension in Google Chrome in the top left (Will look like a jigsaw puzzle piece)
+<img width="342" height="128" alt="image" src="https://github.com/user-attachments/assets/82c4b68f-aa6e-42d4-9c8a-ad474c7071f4" />
+3. Click "Manage Extensions" at the bottom of the window
+4. In the newly opened tab, turn on developer mode, which is in the top left. Turn on developer mode in Google Chrome Extensions
+5. Upload the whole folder
+6. Extension will be available in the extension tab
 
 ### Why I made the extensions 
 When I make yellow card reports, I always feel for certain law reasons I make the same report over and over again. This extension semi automates the process, saving time 
