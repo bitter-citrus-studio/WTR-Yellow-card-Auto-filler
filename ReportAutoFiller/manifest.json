@@ -16,14 +16,14 @@
       "16": "Icons/icon_16.png",
       "48": "Icons/icon_48.png",
       "128": "Icons/icon_128.png"
-    },
+    }
+  },
 
-    "content_scripts": [
-      {
-        "matches": [ "https://www.whostheref.com/db_admin/*" ],
-        "js": [ "content.js" ],
-        "css": [ "styles.css" ]
-      }
-    ]
-  }
+  "content_scripts": [
+    {
+      "matches": [ "https://www.whostheref.com/db_admin/*" ],
+      "js": [ "content.js" ],
+      "css": [ "styles.css" ]
+    }
+  ]
 }

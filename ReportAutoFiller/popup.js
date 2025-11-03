@@ -1,4 +1,193 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", initPopup);
+
+async function initPopup() {
+    const form = document.getElementById("ycAutofillForm");
+    const submitBtn = document.getElementById("submit");
+    const lawSelect = document.getElementById("OffenceN");
+    const teamSelect = document.getElementById("pTeam");
+    const numberSelect = document.getElementById("pNumber");
+    const reportField = document.getElementById("report");
+
+    if (!form || !submitBtn) return;
+
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab) return console.warn("No active tab found");
+
+    // 1️⃣ Populate the Team select from the page
+    populateTeamOptions(tab);
+
+    // 2️⃣ Handle autofill form submission
+    submitBtn.addEventListener("click", (e) => handleFormSubmit(e, form, tab));
+
+    // 3️⃣ Handle automatic report generation
+    [lawSelect, teamSelect, numberSelect].forEach((el) =>
+        el.addEventListener("change", () =>
+            updateReport(lawSelect, teamSelect, numberSelect, reportField)
+        )
+    );
+
+    updateReport(lawSelect, teamSelect, numberSelect, reportField);
+}
+
+/* ---------------------------------------------
+   Autofill handler — sends data into the webpage
+--------------------------------------------- */
+async function handleFormSubmit(event, form, tab) {
+    event.preventDefault();
+
+    const values = Object.fromEntries(new FormData(form).entries());
+    console.log("Popup form submitted:", values);
+
+    try {
+        await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: autofillPage,
+            args: [values],
+        });
+    } catch (err) {
+        console.error("Autofill injection failed:", err);
+    }
+}
+
+/* ---------------------------------------------
+   Injected autofill function (runs in page context)
+--------------------------------------------- */
+function autofillPage(vals) {
+    try {
+        const mapping = {
+            pName: "text_01",
+            pTeam: "team_index_key",
+            pPosition: "select_01",
+            pNumber: "select_02",
+            OffenceN: "select_03",
+            pGame: "select_04",
+            tElapsed: "text_05",
+            score: "text_06",
+            refProx: "text_07",
+            conditions: "text_08",
+            temperOfGame: "mce1_ifr",
+            playerCautioned: "select_05",
+            flaggedByAR: "select_06",
+            dissent: "select_07",
+            report: "mce2_ifr",
+        };
+
+        for (const [popupKey, pageId] of Object.entries(mapping)) {
+            const value = vals[popupKey];
+            if (!value) continue;
+
+            const el = document.getElementById(pageId);
+            if (!el) {
+                console.warn(`Element not found: ${pageId}`);
+                continue;
+            }
+
+            switch (el.tagName) {
+                case "INPUT":
+                case "TEXTAREA":
+                    el.value = value;
+                    el.dispatchEvent(new Event("input", { bubbles: true }));
+                    el.dispatchEvent(new Event("change", { bubbles: true }));
+                    break;
+
+                case "SELECT":
+                    const matched =
+                        Array.from(el.options).find((opt) => opt.value === value) ||
+                        Array.from(el.options).find(
+                            (opt) => opt.text.trim() === value.trim()
+                        );
+                    if (matched) {
+                        el.value = matched.value;
+                        matched.selected = true;
+                        el.dispatchEvent(new Event("input", { bubbles: true }));
+                        el.dispatchEvent(new Event("change", { bubbles: true }));
+                    } else {
+                        console.warn(`No match for select ${pageId}:`, value);
+                    }
+                    break;
+
+                case "IFRAME":
+                    try {
+                        const doc = el.contentDocument || el.contentWindow.document;
+                        if (doc?.body) {
+                            doc.body.innerHTML = value;
+                        } else {
+                            console.warn(`Iframe ${pageId} has no body`);
+                        }
+                    } catch (err) {
+                        console.error(`Error writing to iframe ${pageId}:`, err);
+                    }
+                    break;
+            }
+        }
+    } catch (err) {
+        console.error("Autofill script error:", err);
+    }
+}
+
+/* ---------------------------------------------
+   Fetch team <select> options from the page
+--------------------------------------------- */
+async function populateTeamOptions(tab) {
+    try {
+        const response = await chrome.tabs.sendMessage(tab.id, {
+            action: "getSelectOptions",
+        });
+
+        const select = document.getElementById("pTeam");
+        select.innerHTML = "";
+
+        if (response?.options?.length) {
+            response.options.forEach((opt) => {
+                const el = document.createElement("option");
+                el.value = opt.value;
+                el.textContent = opt.text;
+                select.appendChild(el);
+            });
+        } else {
+            const el = document.createElement("option");
+            el.textContent = "No options found";
+            select.appendChild(el);
+        }
+    } catch (err) {
+        console.warn("Team options fetch failed:", err);
+    }
+}
+
+/* ---------------------------------------------
+   Combine law + team + number to fill report
+--------------------------------------------- */
+function updateReport(lawSelect, teamSelect, numberSelect, reportField) {
+    if (!reportField) return;
+
+    const law = lawSelect?.value;
+    const teamValue = teamSelect?.value || "";      // actual selected value
+    const numberValue = numberSelect?.value || "";  // actual selected value
+
+    console.log("Team Value:", teamValue);
+    console.log("Number Value :", numberValue);
+
+    // Only update if BOTH team and number are NOT the default/empty
+    if (!teamValue || teamValue == "*" || !numberValue) {
+        reportField.value = reportField.defaultValue || "";
+        return;
+    }
+
+    const teamText = teamSelect.selectedOptions[0]?.text || "";
+    const numberText = numberSelect.selectedOptions[0]?.text || "";
+
+    if (law === "Law 9 – 9 Repeated Infringements") {
+        reportField.value = `Gave a warning to ${teamText}'s captain about ${teamText} ${numberText}'s discipline. ${teamText} ${numberText} infringed again. YC was issued.`;
+    } else if (law === "Law 9 – 10 Team Repeated Infringements") {
+        reportField.value = `Gave a team warning to ${teamText}'s captain. ${teamText} ${numberText} infringed again. YC was issued.`;
+    } else {
+        reportField.value = reportField.defaultValue || "";
+    }
+}
+
+
+
+/*document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("ycAutofillForm");
     const btn = document.getElementById("submit"); // your submit button
 
@@ -14,7 +203,6 @@
 
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-        // Only update player name and team
         chrome.scripting.executeScript({
             target: { tabId: tab.id },
             func: (vals) => {
@@ -171,4 +359,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initialize state
     updateCombinedSelect();
-});
+});*/
