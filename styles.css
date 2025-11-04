@@ -45,13 +45,27 @@ weeText {
     text-align: center;
 }
 
-button {
+.fillFormbutton {
   background-color: #007bff;
   color: white;
   border: none;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #0056b3;
+.fillFormbutton:hover {
+    background-color: #0056b3;
 }
+
+.customiseButton {
+    all: unset;
+    border: none;
+    cursor: pointer;
+    background-color: none;
+    color: none;
+    float: right;
+}
+
+    .customiseButton:hover {
+        color: #0056b3;
+        transform: scale(1.1);
+    }

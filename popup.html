@@ -1,9 +1,18 @@
 <head>
     <link rel="stylesheet" href="styles.css" />
     <script src="popup.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 </head>
 
-<h1>SRU Report AutoFiller</h1>
+<button class="button customiseButton">
+    <span class="material-icons">
+        tune
+    </span>
+</button>
+<br/>
+<br/>
+
+<h1>WTR Report Auto-Filler</h1>
 
 <form id="ycAutofillForm">
     <label for="pName">First Name</label>
@@ -194,7 +203,7 @@
     <textarea id="report" name="report" rows="5" placeholder="Sample report"></textarea>
     <br />
 
-    <button type="submit" id="submit">Fill Form</button>
+    <button type="submit" id="submit" class="button fillFormButton">Fill Form</button>
 
     <hr class="solid"><hr/>
 
