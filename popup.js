@@ -1,5 +1,4 @@
 ﻿document.addEventListener("DOMContentLoaded", initPopup);
-
 async function initPopup() {
     const form = document.getElementById("ycAutofillForm");
     const submitBtn = document.getElementById("submit");
@@ -7,6 +6,9 @@ async function initPopup() {
     const teamSelect = document.getElementById("pTeam");
     const numberSelect = document.getElementById("pNumber");
     const reportField = document.getElementById("report");
+    const customiseButton = document.getElementById("customiseButton");
+    const conditionsSelect = document.getElementById("conditions");
+    const patternSelect = document.getElementById("temperOfGame");
 
     if (!form || !submitBtn) return;
 
@@ -15,6 +17,15 @@ async function initPopup() {
 
     // 1️⃣ Populate the Team select from the page
     populateTeamOptions(tab);
+
+    customiseButton.addEventListener('click', openCustomiseWindow);
+
+    //Get conditons
+    let conditions = await getOrInitStorageItem('conditions', ['Dry, dry pitch', 'Dry but slippery ball', 'Wet with a slippery ball', 'Dry but windy']);
+    populateSelect(conditionsSelect, conditions);
+
+    let patterns = await getOrInitStorageItem('patterns', ['Even and well Contested game', 'Huge score difference, one team better than the other', 'Tight game with a few scuffles']);
+    populateSelect(patternSelect, patterns);
 
     // 2️⃣ Handle autofill form submission
     submitBtn.addEventListener("click", (e) => handleFormSubmit(e, form, tab));
@@ -27,6 +38,10 @@ async function initPopup() {
     );
 
     updateReport(lawSelect, teamSelect, numberSelect, reportField);
+
+    // 2️⃣ Start listening for changes
+    listenForConditionChanges(conditionsSelect);
+    listenForConditionChanges(patternSelect);
 }
 
 /* ---------------------------------------------
@@ -185,6 +200,54 @@ function updateReport(lawSelect, teamSelect, numberSelect, reportField) {
     }
 }
 
+function openCustomiseWindow() {
+    chrome.windows.create({
+        url: 'customiseWindow.html', // The file to open
+        type: 'popup',        // Opens as a standalone popup window
+        width: 325,
+        height: 600
+    });
+}
+
+async function getOrInitStorageItem(key, defaultValue) {
+    let stored = await chrome.storage.sync.get(key);
+    if (!stored[key]) {
+        await chrome.storage.sync.set({ [key]: defaultValue });
+        return defaultValue;
+    }
+    return stored[key];
+}
+
+function populateSelect(select, items) {
+    select.innerHTML = '';
+    const defaultOption = document.createElement('option');
+    defaultOption.value = "";
+    defaultOption.textContent = "Choose an option or leave blank";
+    select.appendChild(defaultOption);
+    items.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item;
+        option.textContent = item;
+        select.appendChild(option);
+    });
+}
+
+// Function to listen for changes in storage
+function listenForConditionChanges() {
+    const conditionsSelect = document.getElementById('conditions');
+    const patternsSelect = document.getElementById('temperOfGame');
+
+    chrome.storage.onChanged.addListener((changes, area) => {
+        if (area === 'sync') {
+            if (changes.conditions) {
+                populateSelect(conditionsSelect, changes.conditions.newValue);
+            }
+            if (changes.patterns) {
+                populateSelect(patternsSelect, changes.patterns.newValue);
+            }
+        }
+    });
+}
 
 
 /*document.addEventListener("DOMContentLoaded", () => {
