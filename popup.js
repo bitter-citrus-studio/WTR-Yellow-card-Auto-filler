@@ -27,10 +27,10 @@ async function initPopup() {
     let patterns = await getOrInitStorageItem('patterns', ['Even and well Contested game', 'Huge score difference, one team better than the other', 'Tight game with a few scuffles']);
     populateSelect(patternSelect, patterns);
 
-    // 2️⃣ Handle autofill form submission
+    // Handle autofill form submission
     submitBtn.addEventListener("click", (e) => handleFormSubmit(e, form, tab));
 
-    // 3️⃣ Handle automatic report generation
+    // Handle automatic report generation
     [lawSelect, teamSelect, numberSelect].forEach((el) =>
         el.addEventListener("change", () =>
             updateReport(lawSelect, teamSelect, numberSelect, reportField)
@@ -39,9 +39,10 @@ async function initPopup() {
 
     updateReport(lawSelect, teamSelect, numberSelect, reportField);
 
-    // 2️⃣ Start listening for changes
-    listenForConditionChanges(conditionsSelect);
-    listenForConditionChanges(patternSelect);
+    // Start listening for changes
+    //listenForConditionChanges(conditionsSelect);
+    listenForStorageChanges(patternSelect);
+    listenForStorageChanges(conditionsSelect);
 }
 
 /* ---------------------------------------------
@@ -233,22 +234,18 @@ function populateSelect(select, items) {
 }
 
 // Function to listen for changes in storage
-function listenForConditionChanges() {
-    const conditionsSelect = document.getElementById('conditions');
-    const patternsSelect = document.getElementById('temperOfGame');
-
+function listenForStorageChanges(select) {
     chrome.storage.onChanged.addListener((changes, area) => {
-        if (area === 'sync') {
-            if (changes.conditions) {
-                populateSelect(conditionsSelect, changes.conditions.newValue);
-            }
-            if (changes.patterns) {
-                populateSelect(patternsSelect, changes.patterns.newValue);
+        if (area !== 'sync') return;
+
+        for (const [key, { newValue }] of Object.entries(changes)) {
+            console.log("hey");
+            if (select && Array.isArray(newValue)) {
+                populateSelect(select, newValue);
             }
         }
     });
 }
-
 
 /*document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("ycAutofillForm");
