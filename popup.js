@@ -145,28 +145,30 @@ function autofillPage(vals) {
    Fetch team <select> options from the page
 --------------------------------------------- */
 async function populateTeamOptions(tab) {
+    const element = document.createElement("option");
+    const select = document.getElementById("pTeam");
     try {
         const response = await chrome.tabs.sendMessage(tab.id, {
             action: "getSelectOptions",
         });
-
-        const select = document.getElementById("pTeam");
+        
         select.innerHTML = "";
 
         if (response?.options?.length) {
             response.options.forEach((opt) => {
-                const el = document.createElement("option");
-                el.value = opt.value;
-                el.textContent = opt.text;
-                select.appendChild(el);
+                
+                element.value = opt.value;
+                element.textContent = opt.text;
+                select.appendChild(element);
             });
         } else {
-            const el = document.createElement("option");
-            el.textContent = "No options found";
-            select.appendChild(el);
+            element.textContent = "No teams found";
+            select.appendChild(element);
         }
     } catch (err) {
-        console.warn("Team options fetch failed:", err);
+        console.log("Team options fetch failed:", err);
+        element.textContent = "Not available";
+        select.appendChild(element);
     }
 }
 

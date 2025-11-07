@@ -84,22 +84,33 @@
      * Generic helper to check storage or initialize with defaults
      */
     async function getOrInitStorageItem(key, defaultValue) {
-        const stored = await chrome.storage.sync.get(key);
-        if (!stored[key]) {
-            await chrome.storage.sync.set({ [key]: defaultValue });
-            return defaultValue;
+        try {
+            const stored = await chrome.storage.sync.get(key);
+            if (!stored[key]) {
+                await chrome.storage.sync.set({ [key]: defaultValue });
+                return defaultValue;
+            }
+            return stored[key];
+        } catch (error) {
+            console.error(`Error accessing storage for key "${key}":`, error);
+            return defaultValue; // fallback to default if storage fails
         }
-        return stored[key];
     }
 
     async function UpdateStorage(container, storageKey) {
-        // Collect all input values
-        const updatedOptions = Array.from(container.querySelectorAll('input'))
-            .map(input => input.value.trim())
-            .filter(v => v !== '');
+        try {
+            // Collect all input values
+            const updatedOptions = Array.from(container.querySelectorAll('input'))
+                .map(input => input.value.trim())
+                .filter(v => v !== '');
 
-        // Save to storage with dynamic key
-        await chrome.storage.sync.set({ [storageKey]: updatedOptions });
+            // Save to storage with dynamic key
+            await chrome.storage.sync.set({ [storageKey]: updatedOptions });
+            console.log(`Storage updated for key "${storageKey}"`, updatedOptions);
+        } catch (error) {
+            console.error(`Failed to update storage for key "${storageKey}":`, error);
+        }
     }
+
 
 });
