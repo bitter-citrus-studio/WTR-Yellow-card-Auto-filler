@@ -24,6 +24,7 @@
             renderOptions(conditionsContainer, conditions);
             newConditionInput.value = '';
         }
+        UpdateAllStorage();
     });
 
     addPatternBtn.addEventListener('click', () => {
@@ -33,10 +34,17 @@
             renderOptions(patternsContainer, patterns);
             newPatternInput.value = '';
         }
+        UpdateAllStorage();
     });
 
+    async function UpdateAllStorage()
+    {
+        await UpdateStorage(conditionsContainer, 'conditions');
+        await UpdateStorage(patternsContainer, 'patterns');
+    }
+
     // TODO: Make this able to go through all the storage items
-    saveBtn.addEventListener('click', async () => {
+    /*saveBtn.addEventListener('click', async () => {
         await UpdateStorage(conditionsContainer, 'conditions');
         await UpdateStorage(patternsContainer, 'patterns');
 
@@ -45,9 +53,7 @@
         setTimeout(() => {
             saveMessage.style.display = 'none';
         }, 2000);
-    });
-
-
+    });*/
 
     /**
      * Helper function to render the list visually
@@ -71,6 +77,7 @@
                 removeBtn.addEventListener('click', () => {
                     options.splice(index, 1);
                     renderOptions(container, options);
+                    UpdateAllStorage();
                 });
 
                 div.appendChild(input);

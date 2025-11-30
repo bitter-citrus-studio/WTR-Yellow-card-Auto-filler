@@ -145,7 +145,6 @@ function autofillPage(vals) {
    Fetch team <select> options from the page
 --------------------------------------------- */
 async function populateTeamOptions(tab) {
-    const element = document.createElement("option");
     const select = document.getElementById("pTeam");
     try {
         const response = await chrome.tabs.sendMessage(tab.id, {
@@ -157,6 +156,7 @@ async function populateTeamOptions(tab) {
         if (response?.options?.length) {
             response.options.forEach((opt) => {
                 
+                const element = document.createElement("option");
                 element.value = opt.value;
                 element.textContent = opt.text;
                 select.appendChild(element);
@@ -167,6 +167,7 @@ async function populateTeamOptions(tab) {
         }
     } catch (err) {
         console.log("Team options fetch failed:", err);
+        const element = document.createElement("option");
         element.textContent = "Not available";
         select.appendChild(element);
     }
