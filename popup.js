@@ -1,5 +1,4 @@
 ﻿document.addEventListener("DOMContentLoaded", initPopup);
-
 async function initPopup() {
     const form = document.getElementById("ycAutofillForm");
     const submitBtn = document.getElementById("submit");
@@ -7,6 +6,9 @@ async function initPopup() {
     const teamSelect = document.getElementById("pTeam");
     const numberSelect = document.getElementById("pNumber");
     const reportField = document.getElementById("report");
+    const customiseButton = document.getElementById("customiseButton");
+    const conditionsSelect = document.getElementById("conditions");
+    const patternSelect = document.getElementById("temperOfGame");
 
     if (!form || !submitBtn) return;
 
@@ -16,10 +18,19 @@ async function initPopup() {
     // 1️⃣ Populate the Team select from the page
     populateTeamOptions(tab);
 
-    // 2️⃣ Handle autofill form submission
+    customiseButton.addEventListener('click', openCustomiseWindow);
+
+    //Get conditons
+    let conditions = await getOrInitStorageItem('conditions', ['Dry, dry pitch', 'Dry but slippery ball', 'Wet with a slippery ball', 'Dry but windy']);
+    populateSelect(conditionsSelect, conditions);
+
+    let patterns = await getOrInitStorageItem('patterns', ['Even and well Contested game', 'Huge score difference, one team better than the other', 'Tight game with a few scuffles']);
+    populateSelect(patternSelect, patterns);
+
+    // Handle autofill form submission
     submitBtn.addEventListener("click", (e) => handleFormSubmit(e, form, tab));
 
-    // 3️⃣ Handle automatic report generation
+    // Handle automatic report generation
     [lawSelect, teamSelect, numberSelect].forEach((el) =>
         el.addEventListener("change", () =>
             updateReport(lawSelect, teamSelect, numberSelect, reportField)
@@ -27,6 +38,11 @@ async function initPopup() {
     );
 
     updateReport(lawSelect, teamSelect, numberSelect, reportField);
+
+    // Start listening for changes
+    //listenForConditionChanges(conditionsSelect);
+    listenForStorageChanges(patternSelect);
+    listenForStorageChanges(conditionsSelect);
 }
 
 /* ---------------------------------------------
@@ -129,28 +145,31 @@ function autofillPage(vals) {
    Fetch team <select> options from the page
 --------------------------------------------- */
 async function populateTeamOptions(tab) {
+    const select = document.getElementById("pTeam");
     try {
         const response = await chrome.tabs.sendMessage(tab.id, {
             action: "getSelectOptions",
         });
-
-        const select = document.getElementById("pTeam");
+        
         select.innerHTML = "";
 
         if (response?.options?.length) {
             response.options.forEach((opt) => {
-                const el = document.createElement("option");
-                el.value = opt.value;
-                el.textContent = opt.text;
-                select.appendChild(el);
+                
+                const element = document.createElement("option");
+                element.value = opt.value;
+                element.textContent = opt.text;
+                select.appendChild(element);
             });
         } else {
-            const el = document.createElement("option");
-            el.textContent = "No options found";
-            select.appendChild(el);
+            element.textContent = "No teams found";
+            select.appendChild(element);
         }
     } catch (err) {
-        console.warn("Team options fetch failed:", err);
+        console.log("Team options fetch failed:", err);
+        const element = document.createElement("option");
+        element.textContent = "Not available";
+        select.appendChild(element);
     }
 }
 
@@ -185,7 +204,51 @@ function updateReport(lawSelect, teamSelect, numberSelect, reportField) {
     }
 }
 
+function openCustomiseWindow() {
+    chrome.windows.create({
+        url: 'customiseWindow.html', // The file to open
+        type: 'popup',        // Opens as a standalone popup window
+        width: 325,
+        height: 600
+    });
+}
 
+async function getOrInitStorageItem(key, defaultValue) {
+    let stored = await chrome.storage.sync.get(key);
+    if (!stored[key]) {
+        await chrome.storage.sync.set({ [key]: defaultValue });
+        return defaultValue;
+    }
+    return stored[key];
+}
+
+function populateSelect(select, items) {
+    select.innerHTML = '';
+    const defaultOption = document.createElement('option');
+    defaultOption.value = "";
+    defaultOption.textContent = "Choose an option or leave blank";
+    select.appendChild(defaultOption);
+    items.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item;
+        option.textContent = item;
+        select.appendChild(option);
+    });
+}
+
+// Function to listen for changes in storage
+function listenForStorageChanges(select) {
+    chrome.storage.onChanged.addListener((changes, area) => {
+        if (area !== 'sync') return;
+
+        for (const [key, { newValue }] of Object.entries(changes)) {
+            console.log("hey");
+            if (select && Array.isArray(newValue)) {
+                populateSelect(select, newValue);
+            }
+        }
+    });
+}
 
 /*document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("ycAutofillForm");

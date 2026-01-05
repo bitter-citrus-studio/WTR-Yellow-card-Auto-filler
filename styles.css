@@ -24,6 +24,12 @@ label {
     font-size: 18px;
 }
 
+h3 {
+    color: rgb(14, 16, 18);
+    font-size: 18px;
+    text-decoration: underline;
+}
+
 input, textarea, button, select {
     font-family: sans-serif;
     margin-bottom: 10px;
@@ -31,6 +37,11 @@ input, textarea, button, select {
     font-size: 14px;
     border: 2px solid #050214;
     border-radius: 15px;
+    width: 250px;
+}
+
+.input-narrow {
+    width: 200px;
 }
 
 hr.solid {
@@ -45,13 +56,62 @@ weeText {
     text-align: center;
 }
 
-button {
+.button1 {
   background-color: #007bff;
   color: white;
   border: none;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #0056b3;
+.button1:hover {
+    background-color: #0056b3;
 }
+
+.option-item {
+    display: flex; /* horizontal layout */
+    align-items: center;
+}
+    
+.button2 {
+all: unset;
+border: none;
+cursor: pointer;
+background-color: none;
+color: none;
+float: right;
+}
+
+    .button2:hover {
+        color: #0056b3;
+        transform: scale(1.1);
+    }
+
+.remove-icon {
+    all: unset;
+    border: none;
+    cursor: pointer;
+    background-color: none;
+    font-size: 24px;
+    color: #e74c3c; /* red for remove */
+    margin-left: 6px;
+    transition: transform 0.2s;
+}
+
+    .remove-icon:hover {
+        transform: scale(1.2);
+    }
+
+.add-icon {
+    all: unset;
+    border: none;
+    cursor: pointer;
+    background-color: none;
+    font-size: 24px;
+    color: #00a803;
+    margin-left: 6px;
+    transition: transform 0.2s;
+}
+
+    .add-icon:hover {
+        transform: scale(1.2);
+    }
