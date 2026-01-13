@@ -204,24 +204,31 @@ function updateReport(lawSelect, teamSelect, numberSelect, reportField) {
     console.log("Team Value:", teamValue);
     console.log("Number Value :", numberValue);
 
-    if (teamValue != noTeam && teamValue != "*" && numberValue != null)
-    {
-        const teamText = teamSelect.selectedOptions[0]?.text || "";
-        const numberText = numberSelect.selectedOptions[0]?.text || "";
-        if (law === "Law 9 – 9 Repeated Infringements") {
-            reportField.value = `Gave a warning to ${teamText}'s captain about ${teamText} ${numberText}'s discipline. ${teamText} ${numberText} infringed again. YC was issued.`;
-        } else if (law === "Law 9 – 10 Team Repeated Infringements") {
-            reportField.value = `Gave a team warning to ${teamText}'s captain. ${teamText} ${numberText} infringed again. YC was issued.`;
-        } else {
-            reportField.value = reportField.defaultValue || "";
-        }
-    }       
-
-    // Only update if BOTH team and number are NOT the default/empty
-    if (teamValue == noTeam || teamValue == "*" || numberValue == null)
-    {
+    // 1. Guard Clause: Reset and exit early if data is missing
+    if (!numberValue || teamValue === noTeam || teamValue === "*") {
         reportField.value = reportField.defaultValue || "";
-    }   
+        return;
+    }
+
+    // 2. Extract text once
+    const teamText = teamSelect.selectedOptions[0]?.text || "";
+    const numberText = numberSelect.selectedOptions[0]?.text || "";
+    const playerIdentity = `${teamText} ${numberText}`;
+
+    // 3. Determine the report text
+    switch (law) {
+        case "Law 9 – 9 Repeated Infringements":
+            reportField.value = `Gave a warning to ${teamText}'s captain about ${playerIdentity}'s discipline. ${playerIdentity} infringed again. YC was issued.`;
+            break;
+
+        case "Law 9 – 10 Team Repeated Infringements":
+            reportField.value = `Gave a team warning to ${teamText}'s captain. ${playerIdentity} infringed again. YC was issued.`;
+            break;
+
+        default:
+            reportField.value = reportField.defaultValue || "";
+            break;
+    }
 
     
 }
