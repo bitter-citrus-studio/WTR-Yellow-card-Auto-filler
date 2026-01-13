@@ -1,4 +1,6 @@
 ﻿document.addEventListener("DOMContentLoaded", initPopup);
+
+const noTeam = "Teams not available";
 async function initPopup() {
     const form = document.getElementById("ycAutofillForm");
     const submitBtn = document.getElementById("submit");
@@ -184,7 +186,7 @@ async function populateTeamOptions(tab) {
     } catch (err) {
         console.log("Team options fetch failed:", err);
         const element = document.createElement("option");
-        element.textContent = "Please go to form or refresh page";
+        element.textContent = noTeam;
         select.appendChild(element);
     }
 }
@@ -202,7 +204,7 @@ function updateReport(lawSelect, teamSelect, numberSelect, reportField) {
     console.log("Team Value:", teamValue);
     console.log("Number Value :", numberValue);
 
-    if (teamValue != "Please go to form or refresh page" && teamValue != "*" && numberValue != null)
+    if (teamValue != noTeam && teamValue != "*" && numberValue != null)
     {
         const teamText = teamSelect.selectedOptions[0]?.text || "";
         const numberText = numberSelect.selectedOptions[0]?.text || "";
@@ -216,7 +218,7 @@ function updateReport(lawSelect, teamSelect, numberSelect, reportField) {
     }       
 
     // Only update if BOTH team and number are NOT the default/empty
-    if (teamValue == "Please go to form or refresh page" || teamValue == "*" || numberValue == null)
+    if (teamValue == noTeam || teamValue == "*" || numberValue == null)
     {
         reportField.value = reportField.defaultValue || "";
     }   
