@@ -1,4 +1,6 @@
 ﻿document.addEventListener("DOMContentLoaded", initPopup);
+
+const noTeam = "Teams not available";
 async function initPopup() {
     const form = document.getElementById("ycAutofillForm");
     const submitBtn = document.getElementById("submit");
@@ -9,6 +11,9 @@ async function initPopup() {
     const customiseButton = document.getElementById("customiseButton");
     const conditionsSelect = document.getElementById("conditions");
     const patternSelect = document.getElementById("temperOfGame");
+    const hSelect = document.getElementById('hScore');
+    const aSelect = document.getElementById('aScore');
+    const hiddenInput = document.getElementById('score');
 
     if (!form || !submitBtn) return;
 
@@ -41,8 +46,17 @@ async function initPopup() {
 
     // Start listening for changes
     //listenForConditionChanges(conditionsSelect);
-    listenForStorageChanges(patternSelect);
-    listenForStorageChanges(conditionsSelect);
+    listenForStorageChanges(patternSelect, 'patterns');
+    listenForStorageChanges(conditionsSelect, 'conditions');
+
+    function updateHiddenField() {
+        // Combines the two values into the format "2-1"
+        hiddenInput.value = `${hSelect.value} - ${aSelect.value}`;
+    }
+
+    // Listen for changes on both dropdowns
+    hSelect.addEventListener('change', updateHiddenField);
+    aSelect.addEventListener('change', updateHiddenField);
 }
 
 /* ---------------------------------------------
@@ -158,7 +172,11 @@ async function populateTeamOptions(tab) {
                 
                 const element = document.createElement("option");
                 element.value = opt.value;
-                element.textContent = opt.text;
+                if (opt.text === "Please choose team...") {
+                    element.textContent = "Choose an option or leave blank";
+                } else {
+                    element.textContent = opt.text;
+                }
                 select.appendChild(element);
             });
         } else {
@@ -168,7 +186,7 @@ async function populateTeamOptions(tab) {
     } catch (err) {
         console.log("Team options fetch failed:", err);
         const element = document.createElement("option");
-        element.textContent = "Not available";
+        element.textContent = noTeam;
         select.appendChild(element);
     }
 }
@@ -186,22 +204,33 @@ function updateReport(lawSelect, teamSelect, numberSelect, reportField) {
     console.log("Team Value:", teamValue);
     console.log("Number Value :", numberValue);
 
-    // Only update if BOTH team and number are NOT the default/empty
-    if (!teamValue || teamValue == "*" || !numberValue) {
+    // 1. Guard Clause: Reset and exit early if data is missing
+    if (!numberValue || teamValue === noTeam || teamValue === "*") {
         reportField.value = reportField.defaultValue || "";
         return;
     }
 
+    // 2. Extract text once
     const teamText = teamSelect.selectedOptions[0]?.text || "";
     const numberText = numberSelect.selectedOptions[0]?.text || "";
+    const playerIdentity = `${teamText} ${numberText}`;
 
-    if (law === "Law 9 – 9 Repeated Infringements") {
-        reportField.value = `Gave a warning to ${teamText}'s captain about ${teamText} ${numberText}'s discipline. ${teamText} ${numberText} infringed again. YC was issued.`;
-    } else if (law === "Law 9 – 10 Team Repeated Infringements") {
-        reportField.value = `Gave a team warning to ${teamText}'s captain. ${teamText} ${numberText} infringed again. YC was issued.`;
-    } else {
-        reportField.value = reportField.defaultValue || "";
+    // 3. Determine the report text
+    switch (law) {
+        case "Law 9 – 9 Repeated Infringements":
+            reportField.value = `Gave a warning to ${teamText}'s captain about ${playerIdentity}'s discipline. ${playerIdentity} infringed again. YC was issued.`;
+            break;
+
+        case "Law 9 – 10 Team Repeated Infringements":
+            reportField.value = `Gave a team warning to ${teamText}'s captain. ${playerIdentity} infringed again. YC was issued.`;
+            break;
+
+        default:
+            reportField.value = reportField.defaultValue || "";
+            break;
     }
+
+    
 }
 
 function openCustomiseWindow() {
@@ -237,12 +266,17 @@ function populateSelect(select, items) {
 }
 
 // Function to listen for changes in storage
-function listenForStorageChanges(select) {
+
+function listenForStorageChanges(select, storageKey) {
     chrome.storage.onChanged.addListener((changes, area) => {
         if (area !== 'sync') return;
 
-        for (const [key, { newValue }] of Object.entries(changes)) {
-            console.log("hey");
+        // Check if the specific key we care about is in the changes object
+        if (changes[storageKey]) {
+            const newValue = changes[storageKey].newValue;
+
+            console.log(`Updating ${storageKey} select`);
+
             if (select && Array.isArray(newValue)) {
                 populateSelect(select, newValue);
             }

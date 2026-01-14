@@ -56,6 +56,12 @@ weeText {
     text-align: center;
 }
 
+.row-container {
+    display: flex; /* Magic command to make it a row */
+    align-items: center; /* Keeps everything vertically centered */
+    gap: 10px; /* Adds space between the elements */
+}
+
 .button1 {
   background-color: #007bff;
   color: white;

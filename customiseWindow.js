@@ -2,21 +2,21 @@
 
     const conditionsContainer = document.getElementById("conditionsContainer");
     const patternsContainer = document.getElementById("patternsContainer");
-    const saveBtn = document.getElementById("saveBtn");
+    //const saveBtn = document.getElementById("saveBtn");
     const addConditionBtn = document.getElementById("addConditionBtn");
     const addPatternBtn = document.getElementById("addPatternBtn");
     const newConditionInput = document.getElementById("newConditionOptionInput");
     const newPatternInput = document.getElementById("newPatternOptionInput");
     const saveMessage = document.getElementById("saveMessage");
 
-    // 1️⃣ Load saved options, or initialize defaults
+    // 1️ Load saved options, or initialize defaults
     let conditions = await getOrInitStorageItem('conditions', ['Dry, dry pitch', 'Dry but slippery ball', 'Wet with a slippery ball', 'Dry but windy']);
     let patterns = await getOrInitStorageItem('patterns', ['Even and well Contested game', 'Huge score difference, one team better than the other', 'Tight game with a few scuffles']);
-    // 2️⃣ Render the list in the UI
+    // 2️ Render the list in the UI
     renderOptions(conditionsContainer, conditions);
     renderOptions(patternsContainer, patterns);
 
-    // 3️⃣ Add new option
+    // 3️ Add new option
     addConditionBtn.addEventListener('click', () => {
         const value = newConditionInput.value.trim();
         if (value) {
@@ -37,6 +37,12 @@
         UpdateAllStorage();
     });
 
+    /*saveBtn.addEventListener('click', () => {
+        saveMessage.style.display = "inline"
+        setTimeout(function () { saveMessage.style.display = "none" }, 2000);
+        UpdateAllStorage();
+    });*/
+
     async function UpdateAllStorage()
     {
         await UpdateStorage(conditionsContainer, 'conditions');
@@ -55,10 +61,52 @@
         }, 2000);
     });*/
 
-    /**
-     * Helper function to render the list visually
-     */
     function renderOptions(container, options) {
+        container.innerHTML = ''; // Clear once at the start
+
+        options.forEach((opt, index) => {
+            const div = document.createElement('div');
+            div.className = 'option-item';
+
+            const input = document.createElement('input');
+            input.className = 'input input-narrow';
+            input.type = 'text';
+            input.value = opt;
+
+            const iconBtn = document.createElement('button');
+            iconBtn.className = 'material-icons remove-icon';
+            iconBtn.textContent = 'close';
+
+            // --- NEW: Change icon on input ---
+            input.addEventListener('input', () => {
+                iconBtn.className = "material-icons add-icon"
+                iconBtn.textContent = 'check'; // Changes 'close' to 'check' (tick)
+
+                // Update the underlying data array
+                options[index] = input.value;
+            });
+
+            // --- Handle Button Click ---
+            iconBtn.addEventListener('click', () => {
+                if (iconBtn.textContent === 'check') {
+                    UpdateAllStorage();
+                    iconBtn.textContent = 'close'; 
+                    iconBtn.style.color = 'red';
+                } else {
+                    // If it's a cross, remove the item
+                    options.splice(index, 1);
+                    renderOptions(container, options);
+                    UpdateAllStorage();
+                }
+            });
+
+            div.appendChild(input);
+            div.appendChild(iconBtn);
+            container.appendChild(div);
+        });
+    }
+    /*function renderOptions(container, options)
+    {
         container.innerHTML = '';
         options.forEach(opt => {
             container.innerHTML = '';
@@ -73,7 +121,7 @@
 
                 const removeBtn = document.createElement('button');
                 removeBtn.className = 'material-icons remove-icon';
-                removeBtn.textContent = 'close'; // Material icon name
+                removeBtn.textContent = 'close';
                 removeBtn.addEventListener('click', () => {
                     options.splice(index, 1);
                     renderOptions(container, options);
@@ -85,7 +133,7 @@
                 container.appendChild(div);
             });
         });
-    }
+    }*/
 
     /**
      * Generic helper to check storage or initialize with defaults
