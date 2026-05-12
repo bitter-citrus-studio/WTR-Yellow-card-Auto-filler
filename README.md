@@ -1,5 +1,5 @@
 # WTR-Yellow-card-Auto-filler
-> Only on Google Chrome.
+> Only on [Google Chrome](https://chromewebstore.google.com/detail/jgcaajngndenahcjddegndljkocnhkhc?utm_source=item-share-cb).
 
 To help the process of adding cards to WTR, to reduce paperwork time.  
 This is the first iteration(1.0.0)
